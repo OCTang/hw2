@@ -75,22 +75,76 @@
 
 # Delete existing data, so you'll start fresh each time this script is run.
 # Use `Model.destroy_all` code.
-# TODO!
+Studio.destroy_all
+Movie.destroy_all
+Actor.destroy_all
+ActorMovie.destroy_all
 
 # Generate models and tables, according to the domain model.
-# TODO!
+# ran this in the terminal
+# rails generate model Studio name:string
+# rails generate model Movie title:string year:integer rating:string studio:references
+# rails generate model Actor name:string
+# rails generate model ActorMovie actor:references movie:references character:string
+# rails db:migrate
 
 # Insert data into the database that reflects the sample data shown above.
 # Do not use hard-coded foreign key IDs.
-# TODO!
+# I know in class we would've used
+# warner_bros = Studio.new
+# warner_bros["name"] = "Warner Bros"
+# warner_bros.save
+# but I saw that create would allow me to instantiate and save in one go and it allowed me to do all in one line rather than multiple lines
+# I hope by stating the conscious decision it makes my alternate solution acceptable too!
+
+warner_bros = Studio.create(name: "Warner Bros.")
+
+batman_begins = Movie.create(title: "Batman Begins", year: 2005, rating: "PG-13", studio: warner_bros)
+dark_knight = Movie.create(title: "The Dark Knight", year: 2008, rating: "PG-13", studio: warner_bros)
+dark_knight_rises = Movie.create(title: "The Dark Knight Rises", year: 2012, rating: "PG-13", studio: warner_bros)
+
+christian_bale = Actor.create(name: "Christian Bale")
+michael_caine = Actor.create(name: "Michael Caine")
+liam_neeson = Actor.create(name: "Liam Neeson")
+katie_holmes = Actor.create(name: "Katie Holmes")
+gary_oldman = Actor.create(name: "Gary Oldman")
+heath_ledger = Actor.create(name: "Heath Ledger")
+aaron_eckhart = Actor.create(name: "Aaron Eckhart")
+maggie_gyllenhaal = Actor.create(name: "Maggie Gyllenhaal")
+tom_hardy = Actor.create(name: "Tom Hardy")
+joseph_gordon_levitt = Actor.create(name: "Joseph Gordon-Levitt")
+anne_hathaway = Actor.create(name: "Anne Hathaway")
+
+ActorMovie.create(movie: batman_begins, actor: christian_bale, character: "Bruce Wayne")
+ActorMovie.create(movie: batman_begins, actor: michael_caine, character: "Alfred")
+ActorMovie.create(movie: batman_begins, actor: liam_neeson, character: "Ra's Al Ghul")
+ActorMovie.create(movie: batman_begins, actor: katie_holmes, character: "Rachel Dawes")
+ActorMovie.create(movie: batman_begins, actor: gary_oldman, character: "Commissioner Gordon")
+
+ActorMovie.create(movie: dark_knight, actor: christian_bale, character: "Bruce Wayne")
+ActorMovie.create(movie: dark_knight, actor: heath_ledger, character: "Joker")
+ActorMovie.create(movie: dark_knight, actor: aaron_eckhart, character: "Harvey Dent")
+ActorMovie.create(movie: dark_knight, actor: michael_caine, character: "Alfred")
+ActorMovie.create(movie: dark_knight, actor: maggie_gyllenhaal, character: "Rachel Dawes")
+
+ActorMovie.create(movie: dark_knight_rises, actor: christian_bale, character: "Bruce Wayne")
+ActorMovie.create(movie: dark_knight_rises, actor: gary_oldman, character: "Commissioner Gordon")
+ActorMovie.create(movie: dark_knight_rises, actor: tom_hardy, character: "Bane")
+ActorMovie.create(movie: dark_knight_rises, actor: joseph_gordon_levitt, character: "John Blake")
+ActorMovie.create(movie: dark_knight_rises, actor: anne_hathaway, character: "Selina Kyle")
 
 # Prints a header for the movies output
 puts "Movies"
 puts "======"
 puts ""
 
+
+
 # Query the movies data and loop through the results to display the movies output.
-# TODO!
+
+Movie.all.each do |movie|
+    puts "#{movie.title.ljust(20)} #{movie.year} #{movie.rating.ljust(8)} #{movie.studio.name}"
+  end
 
 # Prints a header for the cast output
 puts ""
@@ -99,4 +153,7 @@ puts "========"
 puts ""
 
 # Query the cast data and loop through the results to display the cast output for each movie.
-# TODO!
+
+ActorMovie.includes(:movie, :actor).each do |actor_movie|
+    puts "#{actor_movie.movie.title.ljust(20)} #{actor_movie.actor.name.ljust(20)} #{actor_movie.character}"
+  end
